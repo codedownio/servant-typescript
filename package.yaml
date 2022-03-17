@@ -1,0 +1,71 @@
+name:                servant-typescript
+version:             0.1.0.0
+github:              "github.com/codedownio/servant-typescript"
+license:             BSD3
+author:              "Tom McLaughlin"
+maintainer:          "tom@codedown.io"
+copyright:           "2022 Tom McLaughlin"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+synopsis:            TypeScript client generation for Servant
+category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/codedownio/servant-typescript>
+
+default-extensions:
+  - OverloadedStrings
+  - QuasiQuotes
+  - NamedFieldPuns
+  - RecordWildCards
+  - ScopedTypeVariables
+  - FlexibleContexts
+  - FlexibleInstances
+  - MultiParamTypeClasses
+  - LambdaCase
+  - MultiWayIf
+  - ViewPatterns
+
+dependencies:
+- base >= 4.7 && < 5
+- aeson
+- aeson-typescript
+- containers
+- directory
+- filepath
+- lens
+- mtl
+- servant
+- servant-foreign
+- string-interpolate
+- text
+
+library:
+  source-dirs: src
+
+executables:
+  servant-typescript-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - servant-typescript
+
+tests:
+  servant-typescript-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - servant-typescript
