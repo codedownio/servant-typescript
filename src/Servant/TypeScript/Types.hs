@@ -26,7 +26,7 @@ data ServantTypeScriptOptions = ServantTypeScriptOptions {
   extraTypes :: [TSType]
 
   -- | Determine to which output file the client function for the given request is mapped.
-  -- Useful for larger APIs.
+  -- Useful to break up larger APIs.
   -- A good approach is to split on "case req ^. (reqFuncName . _FunctionName) of ..."
   -- By default, puts everything in "all.ts"
   , getFileKey :: Req T.Text -> FilePath
@@ -36,6 +36,8 @@ data ServantTypeScriptOptions = ServantTypeScriptOptions {
   , getFunctionName :: Req T.Text -> T.Text
   }
 
+-- | Reasonable default options.
+defaultServantTypeScriptOptions :: ServantTypeScriptOptions
 defaultServantTypeScriptOptions = ServantTypeScriptOptions {
   extraTypes = []
 

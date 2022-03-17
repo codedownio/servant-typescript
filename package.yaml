@@ -47,6 +47,8 @@ dependencies:
 
 library:
   source-dirs: src
+  exposed-modules:
+  - Servant.TypeScript
 
 executables:
   servant-typescript-exe:

@@ -29,10 +29,10 @@ source-repository head
 library
   exposed-modules:
       Servant.TypeScript
+  other-modules:
       Servant.TypeScript.GetFunctions
       Servant.TypeScript.Types
       Servant.TypeScript.Util
-  other-modules:
       Paths_servant_typescript
   hs-source-dirs:
       src

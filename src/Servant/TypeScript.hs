@@ -3,10 +3,52 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE ConstraintKinds #-}
 
+{-|
+Module:      Servant.TypeScript.Types
+Copyright:   (c) 2022 Tom McLaughlin
+License:     BSD3
+Stability:   experimental
+Portability: portable
+
+This library generates TypeScript client libraries for Servant.
+
+First, make sure you have 'TypeScript' instances defined for all of the types used in the API.
+
+@
+data User = User {
+  name :: String
+  , age :: Int
+  , email :: String
+  } deriving (Eq, Show)
+deriveJSONAndTypeScript A.defaultOptions ''User
+@
+
+If you need to do generate lots of boilerplate instances, the functions in @aeson-typescript@'s 'Data.Aeson.TypeScript.Recursive' module can be your friend.
+I've even used 'Data.Aeson.TypeScript.Recursive.recursivelyDeriveMissingTypeScriptInstancesFor' to derive instances for the Kubernetes API.
+
+Next, you'll need some Servant API:
+
+@
+type UserAPI = "users" :> Get '[JSON] [User]
+          :\<|\> "albert" :> Get '[JSON] User
+          :\<|\> "isaac" :> Get '[JSON] User
+@
+
+Generating the library is as simple as this:
+
+@
+main = writeTypeScriptLibrary (Proxy :: Proxy UserAPI) "\/my\/destination\/folder\/"
+@
+
+-}
+
+
 module Servant.TypeScript (
   writeTypeScriptLibrary
   , writeTypeScriptLibrary'
+  , MainConstraints
 
+  -- * Options
   , ServantTypeScriptOptions
   , defaultServantTypeScriptOptions
   , extraTypes
@@ -40,9 +82,11 @@ type MainConstraints api = (
   , GenerateList T.Text (Foreign T.Text api)
   )
 
+-- | Write the TypeScript client library for the given API to the given empty folder using default options.
 writeTypeScriptLibrary :: MainConstraints api => Proxy api -> FilePath -> IO ()
 writeTypeScriptLibrary = writeTypeScriptLibrary' defaultServantTypeScriptOptions
 
+-- | Write the TypeScript client library for the given API to the given empty folder.
 writeTypeScriptLibrary' :: forall api. MainConstraints api => ServantTypeScriptOptions -> Proxy api -> FilePath -> IO ()
 writeTypeScriptLibrary' opts _ rootDir = flip runReaderT opts $ do
   writeClientTypes (Proxy @api) "/tmp/test"
