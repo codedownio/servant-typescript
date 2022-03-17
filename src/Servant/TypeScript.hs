@@ -1,6 +1,5 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE ConstraintKinds #-}
 
@@ -20,7 +19,6 @@ import Control.Monad
 import Control.Monad.Reader
 import Data.Aeson as A hiding (Options)
 import Data.Aeson.TH as A hiding (Options)
-import Data.Aeson.TypeScript.Recursive
 import Data.Aeson.TypeScript.TH
 import qualified Data.List as L
 import qualified Data.Map as M
@@ -111,20 +109,3 @@ getAllTypesFromReqs reqs = S.toList $ S.fromList vals
 
 getEndpoints :: (HasForeign LangTS T.Text api, GenerateList T.Text (Foreign T.Text api)) => Proxy api -> [Req T.Text]
 getEndpoints = listFromAPI (Proxy :: Proxy LangTS) (Proxy :: Proxy T.Text)
-
--- * Testing
-
-data User = User {
-  name :: String
-  , age :: Int
-  , email :: String
-  } deriving (Eq, Show)
-deriveJSONAndTypeScript A.defaultOptions ''User
-
-type UserAPI = "users" :> Get '[JSON] [User]
-          :<|> "albert" :> Get '[JSON] User
-          :<|> "isaac" :> Get '[JSON] User
-
-main = flip runReaderT defaultServantTypeScriptOptions $ do
-  writeClientTypes (Proxy @UserAPI) "/tmp/test"
-  writeClientLibraries (Proxy @UserAPI) "/tmp/test"

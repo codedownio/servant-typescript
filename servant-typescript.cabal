@@ -28,7 +28,6 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
       Servant.TypeScript
       Servant.TypeScript.Types
       Servant.TypeScript.Util
