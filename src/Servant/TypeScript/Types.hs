@@ -2,24 +2,12 @@
 module Servant.TypeScript.Types where
 
 import Control.Lens
-import Control.Monad
-import Control.Monad.Reader
-import Data.Aeson as A hiding (Options)
-import Data.Aeson.TH as A hiding (Options)
 import Data.Aeson.TypeScript.Recursive
 import Data.Aeson.TypeScript.TH
-import qualified Data.List as L
-import qualified Data.Map as M
-import Data.Maybe
-import Data.Proxy
-import qualified Data.Set as S
 import Data.String.Interpolate
 import qualified Data.Text as T
-import Servant.API
 import Servant.Foreign.Internal as FI
 import Servant.TypeScript.Util
-import System.Directory
-import System.FilePath
 
 
 -- | Foreign type for getting TS types

@@ -15,10 +15,7 @@ module Servant.TypeScript (
   ) where
 
 import Control.Lens
-import Control.Monad
 import Control.Monad.Reader
-import Data.Aeson as A hiding (Options)
-import Data.Aeson.TH as A hiding (Options)
 import Data.Aeson.TypeScript.TH
 import qualified Data.List as L
 import qualified Data.Map as M
@@ -28,8 +25,7 @@ import qualified Data.Set as S
 import Data.String.Interpolate
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
-import Servant.API
-import Servant.Foreign.Internal as FI
+import Servant.Foreign
 import Servant.TypeScript.GetFunctions
 import Servant.TypeScript.Types
 import Servant.TypeScript.Util

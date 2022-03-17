@@ -4,13 +4,10 @@ module Servant.TypeScript.GetFunctions (
   ) where
 
 import Control.Lens
-import Data.Char
 import Data.Maybe
-import Data.Proxy
 import Data.String.Interpolate
 import Data.Text (Text)
 import qualified Data.Text as T
-import Servant.API
 import Servant.Foreign.Internal as FI
 
 
