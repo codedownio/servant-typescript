@@ -30,10 +30,12 @@ import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import Servant.API
 import Servant.Foreign.Internal as FI
+import Servant.TypeScript.GetFunctions
 import Servant.TypeScript.Types
 import Servant.TypeScript.Util
 import System.Directory
 import System.FilePath
+
 
 type MainConstraints api = (
   HasForeign LangTSDecls [TSDeclaration] api
