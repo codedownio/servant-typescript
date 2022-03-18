@@ -29,8 +29,8 @@ source-repository head
 library
   exposed-modules:
       Servant.TypeScript
-  other-modules:
       Servant.TypeScript.GetFunctions
+  other-modules:
       Servant.TypeScript.Types
       Servant.TypeScript.Util
       Paths_servant_typescript

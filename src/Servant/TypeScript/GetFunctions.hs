@@ -11,10 +11,11 @@ import qualified Data.Text as T
 import Servant.Foreign.Internal as FI
 
 
-getFunctions :: [Req Text] -> (Req Text -> Text) -> Text
-getFunctions reqs getFunctionName =
+-- | Default implementation of @getFunctions@.
+getFunctions :: (Req Text -> Text) -> [Req Text] -> Text
+getFunctions getFunctionName reqs =
   [i|import queryString from "query-string";\n\n|]
-  <> (T.intercalate "\n" $ fmap (reqToFunction getFunctionName) reqs)
+  <> T.intercalate "\n" (fmap (reqToFunction getFunctionName) reqs)
 
 reqToFunction :: (Req Text -> Text) -> Req Text -> Text
 reqToFunction getFunctionName req = [i|
@@ -24,7 +25,6 @@ export function #{getFunctionName req}#{getGenericBrackets req}(#{getFunctionArg
     method: "#{req ^. reqMethod}",
     headers: {"Content-Type": "application/json;charset=utf-8"}
   };
-
   #{case (req ^. reqBody) of Nothing -> ("" :: Text); Just _ -> "\n  options.body = JSON.stringify(body);\n" }
   let params = {#{T.intercalate ", " (getQueryParamNames req)}};
   return (fetchFn || window.fetch)(`#{getPath req}` + "?" + queryString.stringify(params), options).then((response) => {
@@ -53,8 +53,8 @@ getQueryParamNames req = [x ^. (queryArgName . argName . _PathSegment)
 getFunctionArgs :: Req Text -> Text
 getFunctionArgs req = T.intercalate ", " $ catMaybes $
   maybeBodyArg
-  : (fmap formatCaptureArg $ req ^. (reqUrl . path))
-  <> (fmap (Just . formatQueryArg) $ req ^. (reqUrl . queryStr))
+  : fmap formatCaptureArg (req ^. (reqUrl . path))
+  <> fmap (Just . formatQueryArg) (req ^. (reqUrl . queryStr))
   <> [Just [i|fetchFn?: (input: RequestInfo, init?: RequestInit) => Promise<Response>|]]
 
   where
@@ -83,7 +83,7 @@ getGenericBrackets :: Req Text -> Text
 getGenericBrackets _req = ""
 
 getPath :: Req Text -> Text
-getPath req = "/" <> (T.intercalate "/" $ fmap formatPathSegment (req ^. (reqUrl . path)))
+getPath req = "/" <> T.intercalate "/" (fmap formatPathSegment (req ^. (reqUrl . path)))
   where
     formatPathSegment :: Segment Text -> Text
     formatPathSegment (Segment (Static (PathSegment t))) = t

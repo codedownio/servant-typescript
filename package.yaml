@@ -49,6 +49,7 @@ library:
   source-dirs: src
   exposed-modules:
   - Servant.TypeScript
+  - Servant.TypeScript.GetFunctions
 
 executables:
   servant-typescript-exe:

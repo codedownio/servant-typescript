@@ -23,8 +23,8 @@ data User = User {
 deriveJSONAndTypeScript A.defaultOptions ''User
 @
 
-If you need to do generate lots of boilerplate instances, the functions in @aeson-typescript@'s 'Data.Aeson.TypeScript.Recursive' module can be your friend.
-I've even used 'Data.Aeson.TypeScript.Recursive.recursivelyDeriveMissingTypeScriptInstancesFor' to derive instances for the Kubernetes API.
+If you need to generate lots of boilerplate instances, the functions in @aeson-typescript@'s 'Data.Aeson.TypeScript.Recursive' module can be your friend.
+I've used 'Data.Aeson.TypeScript.Recursive.recursivelyDeriveMissingTypeScriptInstancesFor' to derive instances for the Kubernetes API.
 
 Next, you'll need some Servant API:
 
@@ -46,7 +46,6 @@ main = writeTypeScriptLibrary (Proxy :: Proxy UserAPI) "\/my\/destination\/folde
 module Servant.TypeScript (
   writeTypeScriptLibrary
   , writeTypeScriptLibrary'
-  , MainConstraints
 
   -- * Options
   , ServantTypeScriptOptions
@@ -54,6 +53,10 @@ module Servant.TypeScript (
   , extraTypes
   , getFileKey
   , getFunctionName
+  , getFunctions
+
+  -- * Misc
+  , MainConstraints
   ) where
 
 import Control.Lens
@@ -68,7 +71,6 @@ import Data.String.Interpolate
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import Servant.Foreign
-import Servant.TypeScript.GetFunctions
 import Servant.TypeScript.Types
 import Servant.TypeScript.Util
 import System.Directory
@@ -82,11 +84,11 @@ type MainConstraints api = (
   , GenerateList T.Text (Foreign T.Text api)
   )
 
--- | Write the TypeScript client library for the given API to the given empty folder using default options.
+-- | Write the TypeScript client library for the given API to the given folder using default options.
 writeTypeScriptLibrary :: MainConstraints api => Proxy api -> FilePath -> IO ()
 writeTypeScriptLibrary = writeTypeScriptLibrary' defaultServantTypeScriptOptions
 
--- | Write the TypeScript client library for the given API to the given empty folder.
+-- | Write the TypeScript client library for the given API to the given folder.
 writeTypeScriptLibrary' :: forall api. MainConstraints api => ServantTypeScriptOptions -> Proxy api -> FilePath -> IO ()
 writeTypeScriptLibrary' opts _ rootDir = flip runReaderT opts $ do
   writeClientTypes (Proxy @api) "/tmp/test"
@@ -119,13 +121,13 @@ writeClientLibraries _ folder = do
     let (dir, _) = splitFileName fileKey
     liftIO $ createDirectoryIfMissing True (folder </> dir)
 
-    let path' = folder </> fileKey <> ".ts"
+    let path' = folder </> fileKey
     let functionNames = fmap getFunctionName reqs
     when (L.length functionNames /= S.size (S.fromList functionNames)) $ do
       let duplicates = L.foldl' (flip (M.alter (\case Nothing -> Just (1 :: Integer); Just x -> Just (x + 1)))) mempty functionNames
       error [i|Duplicate function names found when trying to generate '#{path'}': #{M.filter (>= 2) duplicates}|]
 
-    liftIO $ T.writeFile path' (getFunctions reqs getFunctionName)
+    liftIO $ T.writeFile path' (getFunctions getFunctionName reqs)
   where
     groupBy :: Ord k => (v -> k) -> [v] -> M.Map k [v]
     groupBy key as = M.fromListWith (++) as'
@@ -137,7 +139,7 @@ getReqsWithDecls = listFromAPI (Proxy :: Proxy LangTSDecls) (Proxy :: Proxy [TSD
 
 getAllTypesFromReqs :: forall a. (Eq a, Ord a) => [Req [a]] -> [a]
 getAllTypesFromReqs reqs = S.toList $ S.fromList vals
-  where vals :: [a] = mconcat $ mconcat [(catMaybes [req ^. reqReturnType, req ^. reqBody])
+  where vals :: [a] = mconcat $ mconcat [catMaybes [req ^. reqReturnType, req ^. reqBody]
                                           <> getTypesFromUrl (req ^. reqUrl)
                                           <> concatMap getTypesFromHeaderArg (req ^. reqHeaders)
                                         | req <- reqs]
