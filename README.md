@@ -3,7 +3,7 @@
 
 This library generates TypeScript client libraries for Servant.
 
-First, make sure you have 'TypeScript' instances defined for all of the types used in the API.
+First, make sure you have [TypeScript](https://hackage.haskell.org/package/aeson-typescript) instances defined for all of the types used in the API.
 
 ```haskell
 data User = User {
@@ -14,22 +14,25 @@ data User = User {
 deriveJSONAndTypeScript A.defaultOptions ''User
 ```
 
-If you need to generate lots of boilerplate instances, the functions in `aeson-typescript`'s 'Data.Aeson.TypeScript.Recursive' module can be your friend.
-I've used 'Data.Aeson.TypeScript.Recursive.recursivelyDeriveMissingTypeScriptInstancesFor' to derive instances for the Kubernetes API.
+If you need to generate lots of boilerplate instances, the functions in `aeson-typescript`'s [Recursive](https://hackage.haskell.org/package/aeson-typescript-0.4.0.0/docs/Data-Aeson-TypeScript-Recursive.html) module can be your friend.
+I've used [recursivelyDeriveMissingTypeScriptInstancesFor](https://hackage.haskell.org/package/aeson-typescript-0.4.0.0/docs/Data-Aeson-TypeScript-Recursive.html#v:recursivelyDeriveMissingTypeScriptInstancesFor) to derive instances for the Kubernetes API.
 
 Next, you'll need some Servant API:
 
 ```haskell
 type UserAPI = "users" :> Get '[JSON] [User]
-          :\<|\> "albert" :> Get '[JSON] User
-          :\<|\> "isaac" :> Get '[JSON] User
+          :<|> "albert" :> Get '[JSON] User
+          :<|> "isaac" :> Get '[JSON] User
 ```
 
 Generating the library is as simple as this:
 
 ```haskell
-main = writeTypeScriptLibrary (Proxy :: Proxy UserAPI) "\/my\/destination\/folder\/"
+main = writeTypeScriptLibrary (Proxy :: Proxy UserAPI) "/my/destination/folder/"
 ```
+## Caveats
+
+* This library doesn't yet support generating generic TypeScript functions to match generic TypeScript instances. You can hack around this by writing your own `getFunctions` and hardcoding them manually for the necessary types.
 
 ## Supporting additional combinators
 
