@@ -43,17 +43,9 @@ The same applies to custom `AuthProtect` combinators from [Servant.API.Experimen
 ```haskell
 instance HasForeign LangTS Text WebSocket where
     type Foreign Text WebSocket = Text
-    foreignFor _lang _pf _ _req = "void"
-
-instance HasForeign LangTS Text WebSocketPending where
-    type Foreign Text WebSocketPending = Text
-    foreignFor _lang _pf _ _req = "void"
-
-instance HasForeign LangTSDecls [TSDeclaration] WebSocketPending where
-    type Foreign [TSDeclaration] WebSocketPending = [TSDeclaration]
-    foreignFor _lang _pf _ _req = []
+    foreignFor _ _ _ _ = "void"
 
 instance HasForeign LangTSDecls [TSDeclaration] WebSocket where
     type Foreign [TSDeclaration] WebSocket = [TSDeclaration]
-    foreignFor _lang _pf _ _req = []
+    foreignFor _ _ _ _ = []
 ```
