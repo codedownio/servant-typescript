@@ -1,6 +1,6 @@
 name:                servant-typescript
-version:             0.1.0.0
-github:              "github.com/codedownio/servant-typescript"
+version:             0.1.0.1
+github:              "codedownio/servant-typescript"
 license:             BSD3
 author:              "Tom McLaughlin"
 maintainer:          "tom@codedown.io"

@@ -5,12 +5,12 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           servant-typescript
-version:        0.1.0.0
+version:        0.1.0.1
 synopsis:       TypeScript client generation for Servant
 description:    Please see the README on GitHub at <https://github.com/codedownio/servant-typescript>
 category:       Web
-homepage:       https://github.com/github.com/codedownio#readme
-bug-reports:    https://github.com/github.com/codedownio/issues
+homepage:       https://github.com/codedownio/servant-typescript#readme
+bug-reports:    https://github.com/codedownio/servant-typescript/issues
 author:         Tom McLaughlin
 maintainer:     tom@codedown.io
 copyright:      2022 Tom McLaughlin
@@ -23,8 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/github.com/codedownio
-  subdir: servant-typescript
+  location: https://github.com/codedownio/servant-typescript
 
 library
   exposed-modules:
