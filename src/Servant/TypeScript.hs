@@ -91,8 +91,8 @@ writeTypeScriptLibrary = writeTypeScriptLibrary' defaultServantTypeScriptOptions
 -- | Write the TypeScript client library for the given API to the given folder.
 writeTypeScriptLibrary' :: forall api. MainConstraints api => ServantTypeScriptOptions -> Proxy api -> FilePath -> IO ()
 writeTypeScriptLibrary' opts _ rootDir = flip runReaderT opts $ do
-  writeClientTypes (Proxy @api) "/tmp/test"
-  writeClientLibraries (Proxy @api) "/tmp/test"
+  writeClientTypes (Proxy @api) rootDir
+  writeClientLibraries (Proxy @api) rootDir
 
 writeClientTypes :: forall api. (
   HasForeign LangTSDecls [TSDeclaration] api
