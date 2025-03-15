@@ -55,6 +55,10 @@ module Servant.TypeScript (
   , getFunctionName
   , getFunctions
 
+  -- * Types
+  , LangTS
+  , LangTSDecls
+
   -- * Misc
   , MainConstraints
   ) where
@@ -139,17 +143,18 @@ getReqsWithDecls = listFromAPI (Proxy :: Proxy LangTSDecls) (Proxy :: Proxy [TSD
 
 getAllTypesFromReqs :: forall a. (Eq a, Ord a) => [Req [a]] -> [a]
 getAllTypesFromReqs reqs = S.toList $ S.fromList vals
-  where vals :: [a] = mconcat $ mconcat [catMaybes [req ^. reqReturnType, req ^. reqBody]
-                                          <> getTypesFromUrl (req ^. reqUrl)
-                                          <> concatMap getTypesFromHeaderArg (req ^. reqHeaders)
-                                        | req <- reqs]
-        getTypesFromUrl (Url path' queryArgs _) = concatMap getTypesFromSegment path' <> concatMap getTypesFromQueryArg queryArgs
-        getTypesFromSegment (Segment (Static {})) = []
-        getTypesFromSegment (Segment (Cap arg)) = [arg ^. argType]
+  where
+    vals :: [a] = mconcat $ mconcat [catMaybes [req ^. reqReturnType, req ^. reqBody]
+                                      <> getTypesFromUrl (req ^. reqUrl)
+                                      <> concatMap getTypesFromHeaderArg (req ^. reqHeaders)
+                                    | req <- reqs]
+    getTypesFromUrl (Url path' queryArgs _) = concatMap getTypesFromSegment path' <> concatMap getTypesFromQueryArg queryArgs
+    getTypesFromSegment (Segment (Static {})) = []
+    getTypesFromSegment (Segment (Cap arg)) = [arg ^. argType]
 
-        getTypesFromQueryArg queryArg = [queryArg ^. (queryArgName . argType)]
+    getTypesFromQueryArg queryArg = [queryArg ^. (queryArgName . argType)]
 
-        getTypesFromHeaderArg ha = [ha ^. (headerArg . argType)]
+    getTypesFromHeaderArg ha = [ha ^. (headerArg . argType)]
 
 getEndpoints :: (HasForeign LangTS T.Text api, GenerateList T.Text (Foreign T.Text api)) => Proxy api -> [Req T.Text]
 getEndpoints = listFromAPI (Proxy :: Proxy LangTS) (Proxy :: Proxy T.Text)
