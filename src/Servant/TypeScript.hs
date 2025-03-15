@@ -64,6 +64,7 @@ module Servant.TypeScript (
   ) where
 
 import Control.Lens
+import Control.Monad
 import Control.Monad.Reader
 import Data.Aeson.TypeScript.TH
 import qualified Data.List as L
