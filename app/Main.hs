@@ -9,8 +9,10 @@ import Data.Aeson as A
 import Data.Aeson.TH as A hiding (Options)
 import Data.Aeson.TypeScript.TH
 import Data.Proxy
+import Data.String.Interpolate
 import Servant.API
 import Servant.TypeScript
+import System.IO.Temp
 
 
 data User = User {
@@ -24,4 +26,8 @@ type UserAPI = "users" :> Get '[JSON] [User]
           :<|> "albert" :> Get '[JSON] User
           :<|> "isaac" :> Get '[JSON] User
 
-main = writeTypeScriptLibrary (Proxy @UserAPI) "/tmp/test"
+main = do
+  tmpDir <- getCanonicalTemporaryDirectory
+  dir <- createTempDirectory tmpDir "servant-typescript-example"
+  writeTypeScriptLibrary (Proxy @UserAPI) dir
+  putStrLn [i|Wrote TypeScript library to: #{dir}|]
