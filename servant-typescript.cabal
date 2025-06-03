@@ -1,11 +1,11 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.37.0.
+-- This file has been generated from package.yaml by hpack version 0.38.0.
 --
 -- see: https://github.com/sol/hpack
 
 name:           servant-typescript
-version:        0.1.0.2
+version:        0.1.0.3
 synopsis:       TypeScript client generation for Servant
 description:    Please see the README on GitHub at <https://github.com/codedownio/servant-typescript>
 category:       Web
