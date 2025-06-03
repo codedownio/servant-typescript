@@ -64,7 +64,7 @@ jobs:
     #     cabal test all
 
   stack:
-    name: stack / ghc ${{ matrix.ghc }}
+    name: ${{ matrix.stack-yaml }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
