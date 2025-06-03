@@ -93,7 +93,7 @@ jobs:
     - name: Run stack setup
       shell: bash
       run: |
-        export STACK_EXTRA_ARGS="--stack-yaml ${{matrix.stack-yaml}}"
+        export STACK_EXTRA_ARGS="--stack-yaml stack/${{matrix.stack-yaml}}"
         stack setup $STACK_EXTRA_ARGS
         echo STACK_EXTRA_ARGS="$STACK_EXTRA_ARGS" >> $GITHUB_ENV
 
