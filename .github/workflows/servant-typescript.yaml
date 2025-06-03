@@ -70,10 +70,11 @@ jobs:
       fail-fast: false
       matrix:
         stack-yaml:
+        - stack-ghc94.yaml
         - stack-ghc96.yaml
         - stack-ghc98.yaml
         - stack-ghc910.yaml
-        - stack-ghc912.yaml
+        # - stack-ghc912.yaml
 
     steps:
     - uses: actions/checkout@v4
